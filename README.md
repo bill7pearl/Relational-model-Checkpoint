@@ -1,87 +1,83 @@
-# Hotel Management System - Relational Schema
+# Database Relational Diagram
 
 
 
-This document represents the logical relational schema derived from the Entity-Relationship diagram.
+```mermaid
+
+erDiagram
+
+    TYPE ||--o{ HOTEL : "is"
+
+    HOTEL ||--o{ ROOM : "is composed"
+
+    CATEGORY ||--o{ ROOM : "is of"
+
+    HOTEL ||--o{ EMPLOYEE : "works"
+
+    EMPLOYEE ||--o{ EMPLOYEE : "leads (recursive)"
 
 
 
----
+    TYPE {
+
+        int Type_Id PK
+
+        string Type_Name
+
+    }
 
 
 
-## 1. Tables and Attributes
+    HOTEL {
+
+        int Hotel_Id PK
+
+        string Hotel_name
+
+        int Type_Id FK
+
+    }
 
 
 
-### **Type**
+    CATEGORY {
 
-* `Type_Id` (PK)
+        int Category_Id PK
 
-* `Type_Name`
+        string Category_Name
 
+        float Price
 
+        int Beds_numbers
 
-### **Hotel**
-
-* `Hotel_Id` (PK)
-
-* `Hotel_Name`
-
-* `Type_Id` (FK) -> References **Type(Type_Id)**
+    }
 
 
 
-### **Category**
+    ROOM {
 
-* `Category_Id` (PK)
+        int Room_Id PK
 
-* `Category_Name`
+        int Floor
 
-* `Price`
+        int Hotel_Id FK
 
-* `Beds_numbers`
+        int Category_Id FK
 
-
-
-### **Room**
-
-* `Room_Id` (PK)
-
-* `Floor`
-
-* `Hotel_Id` (FK) -> References **Hotel(Hotel_Id)**
-
-* `Category_Id` (FK) -> References **Category(Category_Id)**
+    }
 
 
 
-### **Employee**
+    EMPLOYEE {
 
-* `Employee_Id` (PK)
+        int Employee_Id PK
 
-* `Employee_Name`
+        string Employee_Name
 
-* `Employee_Speciality`
+        string Employee_Speciality
 
-* `Hotel_Id` (FK) -> References **Hotel(Hotel_Id)**
+        int Hotel_Id FK
 
-* `Manager_Id` (FK) -> References **Employee(Employee_Id)** *(Self-referencing for "leads" relationship)*
+        int Manager_Id FK
 
-
-
----
-
-
-
-## 2. Relational Mapping Rules applied
-
-
-
-1. **One-to-Many (1:N):** Migrated the Primary Key from the '1' side to the 'N' side as a Foreign Key.
-
-   - *Example:* `Type_Id` moved to **Hotel**.
-
-   - *Example:* `Hotel_Id` and `Category_Id` moved to **Room**.
-
-2. **Recursive Relationship:** Handled the "leads" relationship on the **Employee** entity by adding a self-referencing Foreign Key (`Manager_Id`).
+    }
